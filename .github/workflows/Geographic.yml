@@ -1,0 +1,25 @@
+name: Build Tweak
+on:
+ push:
+   branches: [ main ]
+jobs:
+ build:
+   runs-on: ubuntu-latest
+   steps:
+   - uses: actions/checkout@v2
+   - name: Setup Theos
+     run: |
+       sudo apt update
+       sudo apt install -y git gcc make autoconf automake libtool pkg-config
+       git clone https://github.com/theos/theos.git
+       cd theos
+       ./bootstrap.sh
+       ./configure
+       make
+       sudo make install
+   - name: Build Tweak
+     run: |
+       export THEOS=/path/to/theos
+       export THEOS_DEVICE_IP=device_ip
+       export THEOS_DEVICE_PORT=device_port
+       make package install
